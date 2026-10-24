@@ -565,17 +565,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   </div>
 </template>
 
-<div class="gp" id="guestPanel">
-  <button class="gp-toggle" type="button" id="gpToggle" aria-expanded="false" aria-controls="gpBody">Имя гостя</button>
-  <div class="gp-body" id="gpBody" hidden>
-    <p class="gp-title">Личное приглашение</p>
-    <label for="gpForm">Обращение</label>
-    <select id="gpForm"><option value="female">Дорогая</option><option value="male">Дорогой</option><option value="couple" selected>Дорогие</option></select>
-    <label for="gpName">Имя гостя</label>
-    <input id="gpName" type="text" maxlength="60" autocomplete="off" value="гости">
-    <p class="gp-hint">Приглашение обновляется сразу.</p>
-  </div>
-</div>
+
 
 <script>
 (function () {
@@ -602,8 +592,6 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   var SALUTE = { female: 'Дорогая', male: 'Дорогой', couple: 'Дорогие' };
   var STORE = 'wedding-guest';
   var fromLink = false;
-  var editMode = !/(^|\.)viktoriyakostiantyn\.com$|github\.io$/.test(location.hostname);
-  try { if (new URLSearchParams(location.search).has('edit')) editMode = true; } catch (e) {}
 
   var doc = document, root = doc.documentElement;
   // Always open on the first screen: the browser would otherwise restore the last scroll position
@@ -620,10 +608,6 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var small = window.innerWidth < 760;
 
-  if (editMode) try {
-    var saved = JSON.parse(localStorage.getItem(STORE) || 'null');
-    if (saved && saved.guestName) { VARS.guestForm = SALUTE[saved.form] ? saved.form : 'female'; VARS.guestName = String(saved.guestName).slice(0, 60); }
-  } catch (e) {}
   try {
     var q = new URLSearchParams(window.location.search);
     if (q.get('guests')) { VARS.guestForm = 'couple'; VARS.guestName = q.get('guests').slice(0, 60); fromLink = true; }
@@ -650,21 +634,6 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   render();
 
   // Guest name control
-  if (!editMode) $('#guestPanel').hidden = true;
-  var gpToggle = $('#gpToggle'), gpBody = $('#gpBody'), gpForm = $('#gpForm'), gpName = $('#gpName');
-  gpForm.value = VARS.guestForm; gpName.value = VARS.guestName;
-  gpToggle.addEventListener('click', function () {
-    gpBody.hidden = !gpBody.hidden;
-    gpToggle.setAttribute('aria-expanded', String(!gpBody.hidden));
-    if (!gpBody.hidden) gpName.focus();
-  });
-  function guestChanged() {
-    VARS.guestForm = gpForm.value; VARS.guestName = gpName.value;
-    render();
-    try { localStorage.setItem(STORE, JSON.stringify({ form: VARS.guestForm, guestName: VARS.guestName })); } catch (e) {}
-  }
-  gpForm.addEventListener('change', guestChanged);
-  gpName.addEventListener('input', guestChanged);
 
   // Countdown with Russian plural forms
   var WEDDING = Date.parse(VARS.weddingDateISO);
