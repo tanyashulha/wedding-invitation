@@ -43,7 +43,7 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-#scene{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0}
+#scene{position:fixed;left:0;top:0;width:100%;height:100vh;height:100lvh;display:block;z-index:0}
 .no-gl body{background:radial-gradient(120% 80% at 20% 0%,#FCFAF5 0,#F6F1E7 45%,#E9DFCF 100%) fixed}
 main{position:relative;z-index:2}
 
@@ -53,14 +53,13 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
 .soft{color:var(--soft)}
 
 /* Glass */
-.glass{position:relative;background:linear-gradient(135deg,rgba(255,253,248,.78),rgba(250,244,234,.6));border:1px solid rgba(255,255,255,.8);border-radius:4px;box-shadow:0 30px 80px rgba(90,70,50,.15),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -24px 48px rgba(214,195,160,.12);-webkit-backdrop-filter:blur(8px) saturate(1.1);backdrop-filter:blur(8px) saturate(1.1);transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .6s var(--ease)}
+.glass{position:relative;background:linear-gradient(135deg,rgba(255,253,248,.9),rgba(250,244,234,.8));border:1px solid rgba(255,255,255,.8);border-radius:4px;box-shadow:0 30px 80px rgba(90,70,50,.15),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -24px 48px rgba(214,195,160,.12);transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .6s var(--ease)}
 .glass::before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.6),rgba(255,255,255,0) 60%);opacity:var(--sh,0);transition:opacity .5s;pointer-events:none}
 .glass > *{position:relative}
 .card{padding:clamp(28px,4.4vw,60px) clamp(22px,4vw,56px);display:grid;gap:clamp(14px,1.8vw,22px);align-content:start}
 .float{transform:translate3d(0,calc(var(--p,0) * var(--d,.3) * -90px),0);will-change:transform}
 [data-reveal].is-in{animation:glassIn 1.3s var(--ease) backwards}
 @keyframes glassIn{from{opacity:0;transform:perspective(1000px) translateY(60px) rotateX(10deg)}}
-@media (min-width:860px){.glass{-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15)}}
 .lite .glass,.lite .chip{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(135deg,rgba(255,253,248,.94),rgba(250,244,234,.88))}
 
 /* Buttons */
@@ -117,7 +116,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
 /* Sections */
 .sec{position:relative;padding:clamp(96px,16vw,220px) var(--gutter);overflow:clip}
 .wrap{position:relative;max-width:1180px;margin-inline:auto}
-.ghost{position:absolute;left:50%;top:50%;z-index:0;font-family:var(--display);font-size:clamp(5rem,23vw,21rem);line-height:1;white-space:nowrap;color:rgba(139,124,108,.09);transform:translate(-50%,-50%) translate3d(calc(var(--p,0) * -16vw),0,0);pointer-events:none;user-select:none}
+.ghost{position:absolute;left:50%;top:50%;z-index:0;will-change:transform;font-family:var(--display);font-size:clamp(5rem,23vw,21rem);line-height:1;white-space:nowrap;color:rgba(139,124,108,.09);transform:translate(-50%,-50%) translate3d(calc(var(--p,0) * -16vw),0,0);pointer-events:none;user-select:none}
 @supports (-webkit-text-stroke:1px black){.ghost{color:transparent;-webkit-text-stroke:1px rgba(139,124,108,.3)}}
 .head{display:grid;gap:14px;margin-bottom:clamp(28px,4vw,56px)}
 .center{justify-items:center;text-align:center}
@@ -879,7 +878,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   var FS = [
     'precision highp float;',
     'varying vec3 vN, vW;',
-    'uniform vec3 uCam, uBase, uF0, uSheen; uniform float uRough, uKind, uAlpha, uCamY; uniform vec4 uSh[16];',
+    'uniform vec3 uCam, uBase, uF0, uSheen; uniform float uRough, uKind, uAlpha, uCamY; uniform vec4 uSh[8];',
     'const vec3 KEY = vec3(-0.50,0.72,0.48);',
     'const vec3 SHL = vec3(-0.20,0.30,0.933);',
     'vec3 env(vec3 d, float r){',
@@ -921,7 +920,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     '    col = uBase*(.46 + .60*dif*dif) + uSheen*pow(1.-nv,3.)*.20 + env(R,.55)*.05;',
     '  } else {',
     '    col = uBase; float sh = 0.;',
-    '    for(int i=0;i<16;i++){',
+    '    for(int i=0;i<8;i++){',
     '      vec4 s = uSh[i];',
     '      if(s.w > 0.){',
     '        float t = (s.z - vW.z)/SHL.z;',
@@ -1101,8 +1100,9 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   });
 
   // Particles
-  var NP = small ? 46 : 120, pdata = new Float32Array(NP * 4);
+  var NP = small ? 40 : 100, pdata = new Float32Array(NP * 4);
   for (var i = 0; i < NP; i++) { pdata[i * 4] = Math.random() * 2 - 1; pdata[i * 4 + 1] = Math.random(); pdata[i * 4 + 2] = -3.5 + Math.random() * 6.5; pdata[i * 4 + 3] = Math.random(); }
+  var npDraw = NP;
   var pbuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, pbuf); gl.bufferData(gl.ARRAY_BUFFER, pdata, gl.STATIC_DRAW);
 
   // Matrices
@@ -1124,10 +1124,12 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   }
 
   var FOV = 35 * Math.PI / 180, DIST = 10, HU = 2 * DIST * Math.tan(FOV / 2), WALL_Z = -5.2;
-  var W = 0, H = 0, halfW = 1, dpr = 1, maxDpr = small ? 1.5 : 2, anchors = {};
+  var W = 0, H = 0, halfW = 1, dpr = 1, maxDpr = small ? 1.25 : 1.5, anchors = {};
+  var lastW = 0, lastH = 0, resizeTimer;
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
-    W = window.innerWidth; H = window.innerHeight;
+    W = window.innerWidth; H = canvas.clientHeight || window.innerHeight;
+    lastW = window.innerWidth; lastH = window.innerHeight;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
     halfW = HU / 2 * (W / H);
@@ -1139,7 +1141,10 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     scrollDirty = true;
   }
   function worldY(px) { return -(px - H / 2) / H * HU; }
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize', function () {
+    if (lastH && window.innerWidth === lastW && Math.abs(window.innerHeight - lastH) < 160) return;
+    clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 120);
+  });
   if ('ResizeObserver' in window) new ResizeObserver(layout).observe(doc.body);
   if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(layout);
   resize();
@@ -1150,23 +1155,23 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   var camY = worldY(window.scrollY + H / 2), px = 0, py = 0, t0 = performance.now(), last = t0, running = true;
   var quality = 2, slow = 0, counted = 0;   // steps down if the device cannot keep up
   var silkNow = silkTarget.slice();
-  var sh = new Float32Array(64);
+  var sh = new Float32Array(32);
   doc.addEventListener('visibilitychange', function () { running = !doc.hidden; if (running) { last = performance.now(); slow = 0; counted = 0; requestAnimationFrame(frame); } });
 
   function frame(now) {
     if (!running) return;
     var time = reduce ? 0 : (now - t0) / 1000;
     var dt = Math.min(.1, Math.max(.001, (now - last) / 1000)); last = now;
-    if (quality > 0 && time > 3) {
+    if (quality > 0 && time > 2) {
       slow += dt; counted++;
       if (counted >= 50) {
-        if (slow / counted > .036) { quality--; if (quality === 1) { maxDpr = 1; resize(); } else root.classList.add('lite'); }
+        if (slow / counted > .026) { quality--; if (quality === 1) { maxDpr = 1; resize(); } else { root.classList.add('lite'); npDraw = Math.floor(NP / 2); } }
         slow = 0; counted = 0;
       }
     }
     if (scrollDirty) { domScroll(); scrollDirty = false; }
     var target = worldY(window.scrollY + H / 2);
-    camY += (target - camY) * (reduce ? 1 : 1 - Math.exp(-dt * (small ? 16 : 9)));
+    camY += (target - camY) * (reduce ? 1 : 1 - Math.exp(-dt * (small ? 30 : 22)));
     var ease = 1 - Math.exp(-dt * 3.5);
     px += (pointer.x - px) * ease; py += (pointer.y - py) * ease;
     for (var c = 0; c < 3; c++) silkNow[c] += (silkTarget[c] - silkNow[c]) * ease;
@@ -1197,7 +1202,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
         (o.rz || 0),
         (o.sx || 1) * s, (o.sy || 1) * s, (o.sz || 1) * s);
       draw.push({ o: o, m: m, z: z });
-      if (o.cast && ns < 16) { sh[ns * 4] = x; sh[ns * 4 + 1] = y; sh[ns * 4 + 2] = z; sh[ns * 4 + 3] = s * o.cast; ns++; }
+      if (o.cast && ns < 8) { sh[ns * 4] = x; sh[ns * 4 + 1] = y; sh[ns * 4 + 2] = z; sh[ns * 4 + 3] = s * o.cast; ns++; }
     }
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1245,7 +1250,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     gl.uniform1f(PU.uRange, HU * 1.6); gl.uniform1f(PU.uSize, 3.2 * dpr);
     gl.bindBuffer(gl.ARRAY_BUFFER, pbuf);
     gl.enableVertexAttribArray(PA); gl.vertexAttribPointer(PA, 4, gl.FLOAT, false, 0, 0);
-    gl.drawArrays(gl.POINTS, 0, NP);
+    gl.drawArrays(gl.POINTS, 0, npDraw);
     gl.disableVertexAttribArray(PA);
     gl.depthMask(true);
 
