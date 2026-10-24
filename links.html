@@ -62,10 +62,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);b
       <label><span>Имя гостя или гостей</span><input id="name" maxlength="60" required autocomplete="off" placeholder="Татьяна"></label>
     </div>
     <p class="preview" id="preview" aria-live="polite">Дорогая …!</p>
-    <label><span>Текст сообщения</span><textarea id="message">{обращение}
-С радостью приглашаем вас на нашу свадьбу 7 июля 2027 года. Всё о празднике и анкета гостя — по ссылке:
-{ссылка}</textarea></label>
-    <p class="note">{обращение} и {ссылка} подставятся сами для каждого гостя.</p>
+    <p class="note">Сообщение для гостя соберётся само: обращение, текст приглашения и личная ссылка.</p>
     <div class="actions"><button class="btn" type="submit">Создать приглашение</button></div>
   </form>
 
@@ -97,7 +94,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);b
     return base + '?guest=' + enc(g.name) + (g.form === 'male' ? '&form=male' : '');
   }
   function greeting(g) { return SALUTE[g.form] + ' ' + g.name + '!'; }
-  function message(g) { return $('message').value.replace(/\{обращение\}/g, greeting(g)).replace(/\{ссылка\}/g, linkFor(g)); }
+  var TEXT = 'Есть моменты, которые хочется\nсохранить в памяти навсегда.\n\nИ есть люди, чьё присутствие\nделает эти моменты бесценными.\n\nС радостью приглашаем Вас\nна торжество в честь нашей свадьбы.';
+  function message(g) { return greeting(g) + '\n\n' + TEXT + '\n\nВсё о празднике и анкета гостя — по ссылке:\n' + linkFor(g); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
 
   var toastTimer;
@@ -147,8 +145,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);b
     save(); render(); $('name').value = ''; updatePreview(); $('name').focus();
     toast('Приглашение создано');
   });
-  try { var m = localStorage.getItem(KEY + '-msg'); if (m) $('message').value = m; } catch (e) {}
-  $('message').addEventListener('input', function () { try { localStorage.setItem(KEY + '-msg', $('message').value); } catch (e) {} });
   $('copyAll').addEventListener('click', function () { copy(list.map(function (g) { return greeting(g) + ' — ' + linkFor(g); }).join('\n'), 'Все ссылки скопированы'); });
   updatePreview(); render();
 })();
