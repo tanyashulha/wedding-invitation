@@ -62,7 +62,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);b
       <label><span>Имя гостя или гостей</span><input id="name" maxlength="60" required autocomplete="off" placeholder="Татьяна"></label>
     </div>
     <p class="preview" id="preview" aria-live="polite">Дорогая …!</p>
-    <p class="note">Сообщение для гостя соберётся само: обращение, текст приглашения и личная ссылка.</p>
+    <p class="note">После создания скопируйте личную ссылку и отправьте её гостю.</p>
     <div class="actions"><button class="btn" type="submit">Создать приглашение</button></div>
   </form>
 
@@ -94,8 +94,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);b
     return base + '?guest=' + enc(g.name) + (g.form === 'male' ? '&form=male' : '');
   }
   function greeting(g) { return SALUTE[g.form] + ' ' + g.name + '!'; }
-  var TEXT = 'Есть моменты, которые хочется\nсохранить в памяти навсегда.\n\nИ есть люди, чьё присутствие\nделает эти моменты бесценными.\n\nС радостью приглашаем Вас\nна торжество в честь нашей свадьбы.';
-  function message(g) { return greeting(g) + '\n\n' + TEXT + '\n\nВсё о празднике и анкета гостя — по ссылке:\n' + linkFor(g); }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
 
   var toastTimer;
@@ -124,12 +122,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);b
       head.appendChild(h); head.appendChild(rm);
       var link = document.createElement('p'); link.className = 'link'; link.textContent = linkFor(g);
       var acts = document.createElement('div'); acts.className = 'actions';
-      var b1 = document.createElement('button'); b1.type = 'button'; b1.className = 'btn btn-small'; b1.textContent = 'Скопировать сообщение';
-      b1.addEventListener('click', function () { copy(message(g), 'Сообщение скопировано'); });
-      var b2 = document.createElement('button'); b2.type = 'button'; b2.className = 'btn btn-ghost btn-small'; b2.textContent = 'Только ссылку';
+      var b2 = document.createElement('button'); b2.type = 'button'; b2.className = 'btn btn-small'; b2.textContent = 'Скопировать ссылку';
       b2.addEventListener('click', function () { copy(linkFor(g), 'Ссылка скопирована'); });
       var a = document.createElement('a'); a.className = 'btn btn-ghost btn-small'; a.textContent = 'Открыть'; a.href = linkFor(g); a.target = '_blank'; a.rel = 'noopener';
-      acts.appendChild(b1); acts.appendChild(b2); acts.appendChild(a);
+      acts.appendChild(b2); acts.appendChild(a);
       item.appendChild(head); item.appendChild(link); item.appendChild(acts);
       box.appendChild(item);
     });
