@@ -198,6 +198,55 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
 .thanks-note{font-family:var(--display);font-size:clamp(1.1rem,1rem + .5vw,1.35rem);line-height:1.4;max-width:30em}
 .thanks-note .dot{display:inline-block;width:.5em;height:.5em;margin-left:.2em;vertical-align:.12em;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff 0,#F4EEE4 55%,#D9CDBA 100%);box-shadow:0 4px 10px rgba(90,70,50,.22)}
 @media (min-width:760px){.steps{grid-template-columns:1fr 1fr;gap:18px}}
+/* RSVP form window */
+.rsvp-dialog{width:min(680px,calc(100% - 24px));max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);padding:0;border:1px solid rgba(255,255,255,.85);border-radius:6px;background:linear-gradient(160deg,#FFFDF9,#F8F2E8);color:var(--ink);box-shadow:0 40px 120px rgba(60,45,30,.32);overflow:hidden}
+.rsvp-dialog[open]{display:flex;flex-direction:column;animation:dlgIn .55s var(--ease)}
+.rsvp-dialog::backdrop{background:rgba(58,48,41,.38);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+@keyframes dlgIn{from{opacity:0;transform:translateY(30px) scale(.98)}}
+.rf{display:flex;flex-direction:column;min-height:0;flex:1}
+.rf-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:24px clamp(20px,4vw,40px) 18px;border-bottom:1px solid rgba(139,124,108,.2)}
+.rf-head h2{font-size:clamp(1.5rem,1.2rem + 1.4vw,2.2rem);margin-top:4px}
+.rf-close{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid rgba(139,124,108,.3);background:rgba(255,255,255,.7);cursor:pointer;display:grid;place-items:center}
+.rf-close svg{width:20px;height:20px}
+.rf-body{overflow:auto;overscroll-behavior:contain;padding:8px clamp(20px,4vw,40px) 24px;display:grid;gap:4px}
+.rf fieldset{border:0;margin:0;padding:0;min-width:0}
+.rf-block{display:grid;gap:12px;padding-block:20px;border-bottom:1px solid rgba(139,124,108,.15)}
+.rf-yes{display:grid;gap:4px}
+.rf-yes[disabled]{display:none}
+.rf-legend{font-family:var(--display);font-size:1.2rem;line-height:1.3;padding:0}
+.rf-hint{font-size:.88rem;color:var(--soft);line-height:1.5;margin-top:-4px}
+.rf-field{display:grid;gap:6px;min-width:0}
+.rf-field > span{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.rf input:not([type=radio]):not([type=checkbox]),.rf select,.rf textarea{width:100%;min-height:50px;padding:12px 14px;border:1px solid rgba(139,124,108,.35);border-radius:10px;background:rgba(255,255,255,.8);color:var(--ink);font:inherit;font-size:16px;line-height:1.4;transition:border-color .2s,box-shadow .2s}
+.rf textarea{resize:vertical;min-height:96px}
+.rf input:focus,.rf select:focus,.rf textarea:focus{outline:none;border-color:var(--taupe);box-shadow:0 0 0 3px rgba(214,195,160,.45)}
+.rf .rf-person input:user-invalid,.rf-field input:user-invalid{border-color:#A0523D}
+.rf-choice{display:flex;flex-wrap:wrap;gap:10px}
+.rf-choice label{position:relative;flex:1 1 200px;cursor:pointer}
+.rf-choice input{position:absolute;opacity:0;width:1px;height:1px}
+.rf-choice span{display:flex;align-items:center;justify-content:center;min-height:50px;padding:10px 16px;border-radius:999px;border:1px solid rgba(139,124,108,.35);background:rgba(255,255,255,.6);text-align:center;line-height:1.3;transition:background .3s,border-color .3s,box-shadow .3s}
+.rf-choice input:checked + span{background:linear-gradient(180deg,#EDE0C9 0,#D4BF9C 100%);border-color:rgba(255,255,255,.8);box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 6px 16px rgba(120,95,60,.18)}
+.rf-choice input:focus-visible + span{outline:2px solid var(--ink);outline-offset:3px}
+.rf-check{display:flex;align-items:center;gap:12px;min-height:44px;cursor:pointer}
+.rf-check input{width:20px;height:20px;accent-color:#8B7C6C;flex:none}
+.rf-people{display:grid;gap:14px}
+.rf-person{display:grid;gap:12px;padding:16px;border-radius:12px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.85);box-shadow:0 6px 18px rgba(90,70,50,.06);animation:dlgIn .4s var(--ease)}
+.rf-person-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.rf-num{font-family:var(--display);font-size:1.05rem}
+.rf-remove{min-height:36px;padding:0 4px;border:0;background:none;color:var(--soft);font-size:.85rem;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.rf-people > .rf-person:only-child .rf-remove{display:none}
+.rf-row{display:grid;gap:12px}
+.rf-add{justify-self:start;min-height:44px;padding:0 18px;border-radius:999px;border:1px dashed rgba(139,124,108,.55);background:transparent;cursor:pointer;font-size:.9rem;transition:background .3s}
+.rf-foot{display:grid;justify-items:center;gap:10px;padding:18px clamp(20px,4vw,40px) calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(139,124,108,.2);background:rgba(255,253,248,.9)}
+.rf-foot .btn{width:min(100%,360px)}
+.rf-status{font-size:.88rem;color:var(--soft);text-align:center;min-height:1.3em}
+.rf-status.err{color:#8E3B2B}
+.rf-done{display:grid;justify-items:center;text-align:center;gap:18px;padding:64px clamp(24px,5vw,56px) 56px}
+.rf-done p{max-width:26em}
+.dot-big{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff 0,#F1E7D7 50%,#CDB590 100%);box-shadow:0 10px 24px rgba(90,70,50,.25)}
+@media (hover:hover){.rf-add:hover{background:rgba(214,195,160,.2)}.rf-close:hover{background:#fff}}
+@media (min-width:600px){.rf-row{grid-template-columns:1fr 1fr}.rf-row-kid{grid-template-columns:1fr 120px}}
+@media (max-width:599px){.rsvp-dialog{width:100%;max-width:100%;height:100%;max-height:100%;margin:0;border-radius:0;border:0}}
 /* Dress code pearls */
 .pearls{display:flex;flex-wrap:wrap;gap:14px;padding-block:6px}
 .pearls button{width:54px;height:54px;border:0;border-radius:50%;cursor:pointer;background:radial-gradient(circle at 30% 26%,rgba(255,255,255,.95) 0,rgba(255,255,255,0) 40%),radial-gradient(circle at 70% 78%,rgba(60,40,20,.2) 0,rgba(60,40,20,0) 55%),var(--c);box-shadow:0 10px 22px rgba(90,70,50,.24),inset 0 -6px 12px rgba(90,70,50,.14);outline:1px solid transparent;outline-offset:5px;transition:transform .5s var(--ease),outline-color .3s}
@@ -410,8 +459,8 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
       <li><span class="mt">01</span><h3>Данные гостей</h3><p class="soft">Укажите, пожалуйста, имя и фамилию каждого гостя латиницей, как в заграничном паспорте.</p></li>
       <li><span class="mt">02</span><h3>Маленькие гости</h3><p class="soft">Планируете ли вы приехать с детьми? Если да, укажите их имена и фамилии латиницей, а также возраст.</p></li>
     </ol>
-    <a class="btn" data-href="{{rsvpUrl}}" href="https://docs.google.com/forms/" target="_blank" rel="noopener">Подтвердить присутствие</a>
-    <p class="soft" style="font-size:.85em">Анкета откроется в новой вкладке</p>
+    <button class="btn" type="button" data-rsvp-open>Подтвердить присутствие</button>
+    <p class="soft" style="font-size:.85em">Анкета займёт пару минут</p>
     <p class="thanks-note">Спасибо, что помогаете нам продумать каждую деталь. С нетерпением ждём встречи с вами! <span class="dot" aria-hidden="true"></span></p>
   </article></div></div>
 </section>
@@ -426,6 +475,96 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   </div></div>
 </section>
 </main>
+
+<dialog class="rsvp-dialog" id="rsvpDialog" aria-labelledby="rsvpTitle">
+  <form class="rf" id="rsvpForm">
+    <header class="rf-head">
+      <div><p class="label">Анкета гостя</p><h2 id="rsvpTitle">Подтверждение присутствия</h2></div>
+      <button type="button" class="rf-close" data-rsvp-close aria-label="Закрыть анкету"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></button>
+    </header>
+    <div class="rf-body">
+      <fieldset class="rf-block">
+        <legend class="rf-legend">Сможете ли вы приехать?</legend>
+        <div class="rf-choice">
+          <label><input type="radio" name="attending" value="yes" checked><span>С радостью будем</span></label>
+          <label><input type="radio" name="attending" value="no"><span>К сожалению, не сможем</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="rf-block">
+        <legend class="rf-legend">Контакт для связи</legend>
+        <label class="rf-field"><span>Ваше имя</span><input name="contactName" id="rfContactName" required autocomplete="name" maxlength="80"></label>
+        <label class="rf-field"><span>Телефон, Telegram или WhatsApp</span><input name="contact" required autocomplete="tel" maxlength="80"></label>
+        <p class="rf-hint">Ближе к дате добавим вас в общую группу гостей.</p>
+      </fieldset>
+      <fieldset class="rf-yes" id="rfYes">
+        <div class="rf-block">
+          <p class="rf-legend">Гости</p>
+          <p class="rf-hint">Имя и фамилия латиницей, как в заграничном паспорте.</p>
+          <div class="rf-people" id="rfAdults"></div>
+          <button type="button" class="rf-add" id="rfAddAdult">+ Добавить гостя</button>
+        </div>
+        <div class="rf-block">
+          <p class="rf-legend">Маленькие гости</p>
+          <div class="rf-choice">
+            <label><input type="radio" name="withKids" value="no" checked><span>Едем без детей</span></label>
+            <label><input type="radio" name="withKids" value="yes"><span>Едем с детьми</span></label>
+          </div>
+          <div class="rf-people" id="rfKids"></div>
+          <button type="button" class="rf-add" id="rfAddKid" hidden>+ Добавить ребёнка</button>
+        </div>
+        <div class="rf-block">
+          <p class="rf-legend">Дни праздника</p>
+          <label class="rf-check"><input type="checkbox" name="day1" checked><span>7 июля — свадьба</span></label>
+          <label class="rf-check"><input type="checkbox" name="day2" checked><span>8 июля — White Pool Party</span></label>
+        </div>
+        <div class="rf-block">
+          <p class="rf-legend">Трансфер из Тбилиси</p>
+          <div class="rf-choice">
+            <label><input type="radio" name="transfer" value="need" checked><span>Нужен трансфер</span></label>
+            <label><input type="radio" name="transfer" value="self"><span>Доберёмся сами</span></label>
+          </div>
+          <label class="rf-field"><span>Дата приезда в Тбилиси</span><input type="date" name="arrival" min="2027-06-20" max="2027-07-08"></label>
+        </div>
+      </fieldset>
+      <div class="rf-block">
+        <label class="rf-field"><span>Пожелание молодожёнам или комментарий</span><textarea name="wish" rows="3" maxlength="1500"></textarea></label>
+      </div>
+    </div>
+    <footer class="rf-foot">
+      <button class="btn" type="submit" id="rsvpSubmit">Отправить ответ</button>
+      <p class="rf-status" id="rsvpStatus" role="status" aria-live="polite"></p>
+    </footer>
+  </form>
+  <div class="rf-done" id="rsvpDone" hidden>
+    <span class="dot-big" aria-hidden="true"></span>
+    <h2 id="rsvpDoneTitle">Спасибо!</h2>
+    <p id="rsvpDoneText">Мы получили ваш ответ и с нетерпением ждём встречи.</p>
+    <button class="btn btn-ghost" type="button" data-rsvp-close>Вернуться к приглашению</button>
+  </div>
+</dialog>
+<template id="rfAdultTpl">
+  <div class="rf-person">
+    <div class="rf-person-head"><span class="rf-num">Гость 1</span><button type="button" class="rf-remove">Убрать</button></div>
+    <label class="rf-field"><span>Имя и фамилия латиницей</span><input data-k="name" required maxlength="80" autocomplete="off" autocapitalize="characters" pattern="[A-Za-z][A-Za-z .'\-]*" placeholder="TATIANA IVANOVA" title="Латинскими буквами, как в загранпаспорте"></label>
+    <div class="rf-row">
+      <label class="rf-field"><span>Питание</span><select data-k="food"><option>Без ограничений</option><option>Вегетарианское</option><option>Веганское</option><option>Без глютена</option><option>Без лактозы</option><option>Другое — напишу в комментарии</option></select></label>
+      <label class="rf-field"><span>Аллергии или что нельзя</span><input data-k="allergy" maxlength="120" placeholder="Например, орехи"></label>
+    </div>
+  </div>
+</template>
+<template id="rfKidTpl">
+  <div class="rf-person">
+    <div class="rf-person-head"><span class="rf-num">Ребёнок 1</span><button type="button" class="rf-remove">Убрать</button></div>
+    <div class="rf-row rf-row-kid">
+      <label class="rf-field"><span>Имя и фамилия латиницей</span><input data-k="name" required maxlength="80" autocomplete="off" autocapitalize="characters" pattern="[A-Za-z][A-Za-z .'\-]*" placeholder="ALISA IVANOVA" title="Латинскими буквами, как в загранпаспорте"></label>
+      <label class="rf-field"><span>Возраст</span><input data-k="age" type="number" inputmode="numeric" min="0" max="17" required></label>
+    </div>
+    <div class="rf-row">
+      <label class="rf-field"><span>Питание</span><select data-k="food"><option>Без ограничений</option><option>Вегетарианское</option><option>Веганское</option><option>Без глютена</option><option>Без лактозы</option><option>Другое — напишу в комментарии</option></select></label>
+      <label class="rf-field"><span>Аллергии или что нельзя</span><input data-k="allergy" maxlength="120"></label>
+    </div>
+  </div>
+</template>
 
 <div class="gp" id="guestPanel">
   <button class="gp-toggle" type="button" id="gpToggle" aria-expanded="false" aria-controls="gpBody">Имя гостя</button>
@@ -458,10 +597,12 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     venue: 'Chateau Mephis Kalaki',
     city: 'Грузия',
     rsvpUrl: 'https://docs.google.com/forms/',
+    rsvpEndpoint: '',                           // Google Apps Script web app URL that writes answers to the sheet
     mapUrl: 'https://maps.app.goo.gl/EF7asxCW4LPf9d6E7'
   };
   var SALUTE = { female: 'Дорогая', male: 'Дорогой', couple: 'Дорогие' };
   var STORE = 'wedding-guest';
+  var fromLink = false;
 
   var doc = document, root = doc.documentElement;
   var $ = function (s, r) { return (r || doc).querySelector(s); };
@@ -476,8 +617,8 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   } catch (e) {}
   try {
     var q = new URLSearchParams(window.location.search);
-    if (q.get('guests')) { VARS.guestForm = 'couple'; VARS.guestName = q.get('guests').slice(0, 60); }
-    else if (q.get('guest')) { VARS.guestName = q.get('guest').slice(0, 60); VARS.guestForm = q.get('form') === 'male' ? 'male' : 'female'; }
+    if (q.get('guests')) { VARS.guestForm = 'couple'; VARS.guestName = q.get('guests').slice(0, 60); fromLink = true; }
+    else if (q.get('guest')) { fromLink = true; VARS.guestName = q.get('guest').slice(0, 60); VARS.guestForm = q.get('form') === 'male' ? 'male' : 'female'; }
   } catch (e) {}
 
   function values() {
@@ -610,6 +751,85 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
       silkTarget = b.dataset.rgb.split(',').map(Number);
     });
   });
+
+  // RSVP form in a window
+  (function () {
+    var dlg = $('#rsvpDialog'), form = $('#rsvpForm'), done = $('#rsvpDone'), status = $('#rsvpStatus'), submit = $('#rsvpSubmit');
+    var adults = $('#rfAdults'), kids = $('#rfKids'), addKid = $('#rfAddKid'), yesBlock = $('#rfYes');
+    var opener = null;
+    function renumber(list, word) { $$('.rf-person', list).forEach(function (p, i) { $('.rf-num', p).textContent = word + ' ' + (i + 1); }); }
+    function addPerson(list, tplId, word) {
+      var node = $('#' + tplId).content.firstElementChild.cloneNode(true);
+      $('.rf-remove', node).addEventListener('click', function () { node.remove(); renumber(list, word); });
+      list.appendChild(node); renumber(list, word);
+      return node;
+    }
+    addPerson(adults, 'rfAdultTpl', 'Гость');
+    $('#rfAddAdult').addEventListener('click', function () { var n = addPerson(adults, 'rfAdultTpl', 'Гость'); $('input', n).focus(); });
+    addKid.addEventListener('click', function () { var n = addPerson(kids, 'rfKidTpl', 'Ребёнок'); $('input', n).focus(); });
+    function syncKids() {
+      var on = form.withKids.value === 'yes';
+      addKid.hidden = !on;
+      if (on && !kids.children.length) addPerson(kids, 'rfKidTpl', 'Ребёнок');
+      if (!on) kids.innerHTML = '';
+    }
+    function syncAttending() { yesBlock.disabled = form.attending.value !== 'yes'; }
+    $$('input[name="withKids"]', form).forEach(function (r) { r.addEventListener('change', syncKids); });
+    $$('input[name="attending"]', form).forEach(function (r) { r.addEventListener('change', syncAttending); });
+    // Latin names: uppercase as in a passport
+    form.addEventListener('input', function (e) { var t = e.target; if (t.dataset && t.dataset.k === 'name') { var pos = t.selectionStart; t.value = t.value.toUpperCase(); try { t.setSelectionRange(pos, pos); } catch (er) {} } });
+
+    function open() {
+      opener = doc.activeElement;
+      form.hidden = false; done.hidden = true; status.textContent = ''; status.classList.remove('err');
+      var v = values(), cn = $('#rfContactName');
+      if (!cn.value && fromLink) cn.value = v.guestName;
+      if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+      root.style.overflow = 'hidden';
+    }
+    function close() { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); root.style.overflow = ''; }
+    dlg.addEventListener('close', function () { root.style.overflow = ''; if (opener && opener.focus) opener.focus(); });
+    $$('[data-rsvp-open]').forEach(function (b) { b.addEventListener('click', open); });
+    $$('[data-rsvp-close]', dlg).forEach(function (b) { b.addEventListener('click', close); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+
+    function people(list) {
+      return $$('.rf-person', list).map(function (p) {
+        var o = {}; $$('[data-k]', p).forEach(function (f) { o[f.dataset.k] = f.value.trim(); }); return o;
+      });
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.reportValidity()) { status.textContent = 'Пожалуйста, проверьте выделенные поля.'; status.classList.add('err'); return; }
+      var yes = form.attending.value === 'yes';
+      var data = {
+        submittedAt: new Date().toISOString(),
+        invite: values().guestName,
+        attending: form.attending.value,
+        contactName: form.contactName.value.trim(),
+        contact: form.contact.value.trim(),
+        adults: yes ? people(adults) : [],
+        kids: yes && form.withKids.value === 'yes' ? people(kids) : [],
+        day1: yes && form.day1.checked,
+        day2: yes && form.day2.checked,
+        transfer: yes ? form.transfer.value : '',
+        arrival: yes ? form.arrival.value : '',
+        wish: form.wish.value.trim()
+      };
+      var endpoint = VARS.rsvpEndpoint;
+      if (!endpoint) { status.textContent = 'Анкета ещё не подключена к таблице, поэтому ответ пока не сохранится.'; status.classList.add('err'); return; }
+      submit.disabled = true; status.classList.remove('err'); status.textContent = 'Отправляем…';
+      fetch(endpoint, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
+        .then(function () {
+          $('#rsvpDoneTitle').textContent = yes ? 'Спасибо!' : 'Спасибо, что сообщили';
+          $('#rsvpDoneText').textContent = yes ? 'Мы получили ваш ответ и с нетерпением ждём встречи.' : 'Нам будет вас очень не хватать. Спасибо за тёплые слова и за то, что вы с нами.';
+          form.hidden = true; done.hidden = false;
+          try { localStorage.setItem('wedding-rsvp-sent', '1'); } catch (er) {}
+        })
+        .catch(function () { status.textContent = 'Не получилось отправить. Проверьте интернет и попробуйте ещё раз.'; status.classList.add('err'); })
+        .then(function () { submit.disabled = false; });
+    });
+  })();
 
   /* ------------------------------------------------------------------
      The scene: a small WebGL renderer written for this page.
