@@ -711,6 +711,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     var vh = window.innerHeight;
     if (!reduce) {
       hero.style.setProperty('--sc', Math.max(0, Math.min(1, window.scrollY / (vh * .85))).toFixed(3));
+      if (small) return;
       for (var i = 1; i < sections.length; i++) {
         var r = sections[i].getBoundingClientRect();
         if (r.bottom < -vh || r.top > 2 * vh) continue;
@@ -817,7 +818,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
      ------------------------------------------------------------------ */
   var canvas = $('#scene');
   var gl = null;
-  try { gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }); } catch (e) {}
+  try { gl = canvas.getContext('webgl', { antialias: !small, alpha: false, powerPreference: 'high-performance' }); } catch (e) {}
   var scrollDirty = true;
   window.addEventListener('scroll', function () { scrollDirty = true; }, { passive: true });
 
@@ -1093,7 +1094,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   }
 
   var FOV = 35 * Math.PI / 180, DIST = 10, HU = 2 * DIST * Math.tan(FOV / 2), WALL_Z = -5.2;
-  var W = 0, H = 0, halfW = 1, dpr = 1, maxDpr = small ? 1.25 : 1.5, anchors = {};
+  var W = 0, H = 0, halfW = 1, dpr = 1, maxDpr = small ? 1 : 1.5, anchors = {};
   var lastW = 0, lastH = 0, resizeTimer;
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
