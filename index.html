@@ -818,7 +818,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
      ------------------------------------------------------------------ */
   var canvas = $('#scene');
   var gl = null;
-  try { gl = canvas.getContext('webgl', { antialias: !small, alpha: false, powerPreference: 'high-performance' }); } catch (e) {}
+  try { gl = canvas.getContext('webgl', { antialias: true, alpha: false, powerPreference: 'high-performance' }); } catch (e) {}
   var scrollDirty = true;
   window.addEventListener('scroll', function () { scrollDirty = true; }, { passive: true });
 
@@ -1094,7 +1094,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   }
 
   var FOV = 35 * Math.PI / 180, DIST = 10, HU = 2 * DIST * Math.tan(FOV / 2), WALL_Z = -5.2;
-  var W = 0, H = 0, halfW = 1, dpr = 1, maxDpr = small ? 1 : 1.5, anchors = {};
+  var W = 0, H = 0, halfW = 1, dpr = 1, maxDpr = small ? 1.25 : 1.5, anchors = {};
   var lastW = 0, lastH = 0, resizeTimer;
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
@@ -1141,7 +1141,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     }
     if (scrollDirty) { domScroll(); scrollDirty = false; }
     var target = worldY(window.scrollY + H / 2);
-    camY += (target - camY) * (reduce ? 1 : 1 - Math.exp(-dt * (small ? 30 : 22)));
+    camY += (target - camY) * (reduce ? 1 : 1 - Math.exp(-dt * (small ? 30 : 12)));
     var ease = 1 - Math.exp(-dt * 3.5);
     px += (pointer.x - px) * ease; py += (pointer.y - py) * ease;
     for (var c = 0; c < 3; c++) silkNow[c] += (silkTarget[c] - silkNow[c]) * ease;
