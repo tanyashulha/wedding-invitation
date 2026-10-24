@@ -320,7 +320,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   <div class="ghost" aria-hidden="true">Вместе</div>
   <div class="wrap"><div class="float solo" style="--d:.5"><article class="glass card" data-reveal data-tilt>
     <p class="label">Приглашение</p>
-    <h2 data-t="{{guestSalutation}} {{guestName}}!">Дорогая Татьяна!</h2>
+    <h2 data-t="{{guestSalutation}} {{guestName}}!">Дорогие гости!</h2>
     <div class="verse">
       <p>Есть моменты, которые хочется<br>сохранить в памяти навсегда.</p>
       <p>И есть люди, чьё присутствие<br>делает эти моменты бесценными.</p>
@@ -571,9 +571,9 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   <div class="gp-body" id="gpBody" hidden>
     <p class="gp-title">Личное приглашение</p>
     <label for="gpForm">Обращение</label>
-    <select id="gpForm"><option value="female">Дорогая</option><option value="male">Дорогой</option><option value="couple">Дорогие</option></select>
+    <select id="gpForm"><option value="female">Дорогая</option><option value="male">Дорогой</option><option value="couple" selected>Дорогие</option></select>
     <label for="gpName">Имя гостя</label>
-    <input id="gpName" type="text" maxlength="60" autocomplete="off" value="Татьяна">
+    <input id="gpName" type="text" maxlength="60" autocomplete="off" value="гости">
     <p class="gp-hint">Приглашение обновляется сразу.</p>
   </div>
 </div>
@@ -590,8 +590,8 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   var VARS = {
     brideName: 'Виктория',
     groomName: 'Константин',
-    guestName: 'Татьяна',
-    guestForm: 'female',                       // female → Дорогая, male → Дорогой, couple → Дорогие
+    guestName: 'гости',                         // default for the general link: «Дорогие гости!»
+    guestForm: 'couple',                       // female → Дорогая, male → Дорогой, couple → Дорогие
     weddingDate: '07.07.2027',
     weddingDateISO: '2027-07-07T16:00:00+04:00',   // 16:00 in Georgia
     venue: 'Chateau Mephis Kalaki',
@@ -603,6 +603,8 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   var SALUTE = { female: 'Дорогая', male: 'Дорогой', couple: 'Дорогие' };
   var STORE = 'wedding-guest';
   var fromLink = false;
+  var editMode = !/(^|\.)viktoriyakostiantyn\.com$|github\.io$/.test(location.hostname);
+  try { if (new URLSearchParams(location.search).has('edit')) editMode = true; } catch (e) {}
 
   var doc = document, root = doc.documentElement;
   var $ = function (s, r) { return (r || doc).querySelector(s); };
@@ -611,7 +613,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var small = window.innerWidth < 760;
 
-  try {
+  if (editMode) try {
     var saved = JSON.parse(localStorage.getItem(STORE) || 'null');
     if (saved && saved.guestName) { VARS.guestForm = SALUTE[saved.form] ? saved.form : 'female'; VARS.guestName = String(saved.guestName).slice(0, 60); }
   } catch (e) {}
@@ -623,7 +625,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
 
   function values() {
     var v = {}; for (var k in VARS) v[k] = VARS[k];
-    v.guestName = String(VARS.guestName || '').trim() || 'Татьяна';
+    v.guestName = String(VARS.guestName || '').trim() || 'гости';
     v.guestNames = v.guestName;
     v.guestSalutation = SALUTE[VARS.guestForm] || SALUTE.female;
     v.brideInitial = VARS.brideName.charAt(0);
@@ -641,6 +643,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   render();
 
   // Guest name control
+  if (!editMode) $('#guestPanel').hidden = true;
   var gpToggle = $('#gpToggle'), gpBody = $('#gpBody'), gpForm = $('#gpForm'), gpName = $('#gpName');
   gpForm.value = VARS.guestForm; gpName.value = VARS.guestName;
   gpToggle.addEventListener('click', function () {
@@ -804,7 +807,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
       var yes = form.attending.value === 'yes';
       var data = {
         submittedAt: new Date().toISOString(),
-        invite: values().guestName,
+        invite: fromLink ? values().guestName : 'Общая ссылка',
         attending: form.attending.value,
         contactName: form.contactName.value.trim(),
         contact: form.contact.value.trim(),

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Личные приглашения · Виктория &amp; Константин</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&amp;family=Prata&amp;display=swap">
+<style>
+/* A private helper page for the couple: create a personal link for each guest. */
+:root{--ivory:#F6F1E7;--paper:#FFFDF9;--champ:#D6C3A0;--taupe:#8B7C6C;--soft:#65574B;--ink:#3A3029;--line:rgba(139,124,108,.28);
+  --display:'Prata','Playfair Display',Georgia,serif;--sans:'Jost','Helvetica Neue',Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:radial-gradient(120% 70% at 15% 0%,#FCFAF5 0,#F6F1E7 55%,#EFE6D8 100%) fixed;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,p{margin:0}
+.wrap{max-width:760px;margin:0 auto;padding:48px clamp(16px,5vw,32px) 80px;display:grid;gap:22px}
+.label{font-size:.72rem;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--soft)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(2rem,1.5rem + 2.4vw,3rem);line-height:1.15}
+.lead{color:var(--soft);max-width:36em}
+.card{background:linear-gradient(135deg,rgba(255,253,249,.92),rgba(250,244,234,.8));border:1px solid rgba(255,255,255,.9);border-radius:10px;box-shadow:0 24px 60px rgba(90,70,50,.12),inset 0 1px 0 #fff;padding:clamp(20px,4vw,32px);display:grid;gap:16px}
+.row{display:grid;gap:12px}
+@media (min-width:620px){.row{grid-template-columns:200px 1fr}}
+label{display:grid;gap:6px}
+label > span{font-size:.72rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+input,select,textarea{width:100%;min-height:50px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.85);color:var(--ink);font:inherit;font-size:16px}
+textarea{min-height:96px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);box-shadow:0 0 0 3px rgba(214,195,160,.45)}
+.preview{font-family:var(--display);font-size:1.35rem;min-height:1.6em}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:10px 24px;border-radius:999px;border:1px solid rgba(255,255,255,.75);background:linear-gradient(180deg,#EDE0C9 0,#D4BF9C 55%,#C7AF89 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 10px 22px rgba(120,95,60,.2);color:var(--ink);font:inherit;font-size:.78rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:transform .3s}
+.btn-ghost{background:rgba(255,255,255,.7);box-shadow:0 6px 16px rgba(90,70,50,.08)}
+.btn-small{min-height:40px;padding:6px 14px;font-size:.7rem;letter-spacing:.12em}
+@media (hover:hover){.btn:hover{transform:translateY(-2px)}}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.list{display:grid;gap:12px}
+.item{display:grid;gap:8px;padding:16px;border-radius:10px;background:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.9)}
+.item-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.item h2{font-family:var(--display);font-weight:400;font-size:1.2rem}
+.link{font-size:.85rem;color:var(--soft);word-break:break-all}
+.remove{border:0;background:none;color:var(--soft);font:inherit;font-size:.85rem;text-decoration:underline;text-underline-offset:4px;cursor:pointer;min-height:36px}
+.empty{color:var(--soft);font-size:.95rem}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.on{opacity:1}
+.note{font-size:.85rem;color:var(--soft)}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="label">Только для молодожёнов</p>
+  <h1>Личные приглашения</h1>
+  <p class="lead">Впишите имя гостя и выберите обращение — получится личная ссылка. Гость откроет приглашение, где написано именно его имя, а в таблице ответов будет видно, по чьему приглашению пришёл ответ.</p>
+
+  <form class="card" id="maker">
+    <div class="row">
+      <label><span>Обращение</span>
+        <select id="form">
+          <option value="female">Дорогая</option>
+          <option value="male">Дорогой</option>
+          <option value="couple">Дорогие</option>
+        </select>
+      </label>
+      <label><span>Имя гостя или гостей</span><input id="name" maxlength="60" required autocomplete="off" placeholder="Татьяна"></label>
+    </div>
+    <p class="preview" id="preview" aria-live="polite">Дорогая …!</p>
+    <label><span>Текст сообщения</span><textarea id="message">{обращение}
+С радостью приглашаем вас на нашу свадьбу 7 июля 2027 года. Всё о празднике и анкета гостя — по ссылке:
+{ссылка}</textarea></label>
+    <p class="note">{обращение} и {ссылка} подставятся сами для каждого гостя.</p>
+    <div class="actions"><button class="btn" type="submit">Создать приглашение</button></div>
+  </form>
+
+  <section class="card">
+    <div class="item-head"><h2 style="font-family:var(--display);font-weight:400;font-size:1.4rem">Список гостей</h2><span class="note" id="count"></span></div>
+    <div class="list" id="list"></div>
+    <div class="actions" id="bulk" hidden>
+      <button class="btn btn-ghost btn-small" type="button" id="copyAll">Скопировать все ссылки</button>
+    </div>
+    <p class="note">Список хранится только в этом браузере на этом устройстве.</p>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  var SALUTE = { female: 'Дорогая', male: 'Дорогой', couple: 'Дорогие' };
+  var KEY = 'wedding-invite-links';
+  var base = new URL('./', location.href).href;
+  var $ = function (id) { return document.getElementById(id); };
+  var list = [];
+  try { list = JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { list = []; }
+
+  function linkFor(g) {
+    // Keep Cyrillic readable in messengers; encode only what would break the link
+    var enc = function (v) { return v.replace(/[\s&#?+%=]/g, function (c) { return /\s/.test(c) ? '%20' : encodeURIComponent(c); }); };
+    if (g.form === 'couple') return base + '?guests=' + enc(g.name);
+    return base + '?guest=' + enc(g.name) + (g.form === 'male' ? '&form=male' : '');
+  }
+  function greeting(g) { return SALUTE[g.form] + ' ' + g.name + '!'; }
+  function message(g) { return $('message').value.replace(/\{обращение\}/g, greeting(g)).replace(/\{ссылка\}/g, linkFor(g)); }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
+
+  var toastTimer;
+  function toast(t) { var el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.classList.remove('on'); }, 1800); }
+  function copy(text, done) {
+    var fallback = function () {
+      var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); toast(done); } catch (e) { toast('Выделите текст и скопируйте вручную'); }
+      ta.remove();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { toast(done); }, fallback);
+    else fallback();
+  }
+
+  function render() {
+    var box = $('list'); box.innerHTML = '';
+    $('count').textContent = list.length ? list.length + ' в списке' : '';
+    $('bulk').hidden = !list.length;
+    if (!list.length) { var p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Пока пусто. Создайте первое приглашение выше.'; box.appendChild(p); return; }
+    list.forEach(function (g, i) {
+      var item = document.createElement('div'); item.className = 'item';
+      var head = document.createElement('div'); head.className = 'item-head';
+      var h = document.createElement('h2'); h.textContent = greeting(g);
+      var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'remove'; rm.textContent = 'Удалить';
+      rm.addEventListener('click', function () { list.splice(i, 1); save(); render(); });
+      head.appendChild(h); head.appendChild(rm);
+      var link = document.createElement('p'); link.className = 'link'; link.textContent = linkFor(g);
+      var acts = document.createElement('div'); acts.className = 'actions';
+      var b1 = document.createElement('button'); b1.type = 'button'; b1.className = 'btn btn-small'; b1.textContent = 'Скопировать сообщение';
+      b1.addEventListener('click', function () { copy(message(g), 'Сообщение скопировано'); });
+      var b2 = document.createElement('button'); b2.type = 'button'; b2.className = 'btn btn-ghost btn-small'; b2.textContent = 'Только ссылку';
+      b2.addEventListener('click', function () { copy(linkFor(g), 'Ссылка скопирована'); });
+      var a = document.createElement('a'); a.className = 'btn btn-ghost btn-small'; a.textContent = 'Открыть'; a.href = linkFor(g); a.target = '_blank'; a.rel = 'noopener';
+      acts.appendChild(b1); acts.appendChild(b2); acts.appendChild(a);
+      item.appendChild(head); item.appendChild(link); item.appendChild(acts);
+      box.appendChild(item);
+    });
+  }
+
+  function updatePreview() { var n = $('name').value.trim(); $('preview').textContent = SALUTE[$('form').value] + ' ' + (n || '…') + '!'; }
+  $('name').addEventListener('input', updatePreview);
+  $('form').addEventListener('change', updatePreview);
+  $('maker').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = $('name').value.trim(); if (!name) return;
+    list.unshift({ form: $('form').value, name: name });
+    save(); render(); $('name').value = ''; updatePreview(); $('name').focus();
+    toast('Приглашение создано');
+  });
+  try { var m = localStorage.getItem(KEY + '-msg'); if (m) $('message').value = m; } catch (e) {}
+  $('message').addEventListener('input', function () { try { localStorage.setItem(KEY + '-msg', $('message').value); } catch (e) {} });
+  $('copyAll').addEventListener('click', function () { copy(list.map(function (g) { return greeting(g) + ' — ' + linkFor(g); }).join('\n'), 'Все ссылки скопированы'); });
+  updatePreview(); render();
+})();
+</script>
+</body>
+</html>
