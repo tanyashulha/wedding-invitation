@@ -353,7 +353,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     <p>Чтобы вы могли в полной мере насладиться праздником, мы с радостью берём на себя все расходы на ваше проживание в дни торжества.</p>
     <p class="soft">Всё, что вам остаётся — это разделить с нами эти особенные мгновения.</p>
     <div class="venue-links">
-      <a class="btn btn-ghost" id="mapLink" href="https://www.google.com/maps/search/?api=1&amp;query=Chateau+Mephis+Kalaki" target="_blank" rel="noopener">Посмотреть на карте</a>
+      <a class="btn btn-ghost" id="mapLink" href="https://maps.app.goo.gl/EF7asxCW4LPf9d6E7" target="_blank" rel="noopener">Посмотреть на карте</a>
       <a class="icon-btn" id="instaLink" href="https://www.instagram.com/chateau_mephis_kalaki_/" target="_blank" rel="noopener" aria-label="Шато в Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor" stroke="none"/></svg></a>
     </div>
     <div class="transfer">
@@ -457,7 +457,8 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     weddingDateISO: '2027-07-07T16:00:00+04:00',   // 16:00 in Georgia
     venue: 'Chateau Mephis Kalaki',
     city: 'Грузия',
-    rsvpUrl: 'https://docs.google.com/forms/'
+    rsvpUrl: 'https://docs.google.com/forms/',
+    mapUrl: 'https://maps.app.goo.gl/EF7asxCW4LPf9d6E7'
   };
   var SALUTE = { female: 'Дорогая', male: 'Дорогой', couple: 'Дорогие' };
   var STORE = 'wedding-guest';
@@ -494,7 +495,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     $$('[data-t]').forEach(function (el) { el.textContent = fill(el.getAttribute('data-t'), v); });
     $$('[data-href]').forEach(function (a) { a.href = fill(a.getAttribute('data-href'), v); });
     var map = $('#mapLink');
-    if (map) map.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v.venue + ' ' + v.city);
+    if (map) map.href = v.mapUrl || 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(v.venue + ' ' + v.city);
   }
   render();
 
