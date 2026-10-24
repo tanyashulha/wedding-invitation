@@ -607,6 +607,14 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   try { if (new URLSearchParams(location.search).has('edit')) editMode = true; } catch (e) {}
 
   var doc = document, root = doc.documentElement;
+  // Always open on the first screen: the browser would otherwise restore the last scroll position
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  if (!location.hash) {
+    var touched = false;
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (t) { window.addEventListener(t, function () { touched = true; }, { once: true, passive: true }); });
+    window.scrollTo(0, 0);
+    window.addEventListener('load', function () { if (!touched) window.scrollTo(0, 0); });
+  }
   var $ = function (s, r) { return (r || doc).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || doc).querySelectorAll(s)); };
   root.lang = 'ru';
