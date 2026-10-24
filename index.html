@@ -1063,14 +1063,14 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     { g: 'sphere', mat: 'pearlNude', sec: 'rsvp', fx: .6, dy: 1.6, z: -.8, s: .2, bob: .12, cast: 1, m: 0 },
     { g: 'silkWide', mat: 'silk', sec: 'thanks', fx: 0, dy: -2.6, z: -1.2, rx: -1.05, wave: .2, m: { dy: -2.8, s: .5 } }
   ];
-  O = O.filter(function (o) { return !(small && o.m === 0); }).map(function (o) {
+  O = O.filter(function (o) { return !(small && (o.m === 0 || o.mat === 'glass')); }).map(function (o) {
     if (small && o.m) for (var k in o.m) o[k] = o.m[k];
     else if (small && o.s) o.s *= .6;
     return o;
   });
 
   // Particles
-  var NP = small ? 40 : 100, pdata = new Float32Array(NP * 4);
+  var NP = small ? 0 : 100, pdata = new Float32Array(NP * 4);
   for (var i = 0; i < NP; i++) { pdata[i * 4] = Math.random() * 2 - 1; pdata[i * 4 + 1] = Math.random(); pdata[i * 4 + 2] = -3.5 + Math.random() * 6.5; pdata[i * 4 + 3] = Math.random(); }
   var npDraw = NP;
   var pbuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, pbuf); gl.bufferData(gl.ARRAY_BUFFER, pdata, gl.STATIC_DRAW);
@@ -1109,6 +1109,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     var sy = window.scrollY;
     sections.forEach(function (s) { var r = s.getBoundingClientRect(); anchors[s.id] = { top: r.top + sy, h: r.height }; });
     scrollDirty = true;
+    drawn = 0;
   }
   function worldY(px) { return -(px - H / 2) / H * HU; }
   window.addEventListener('resize', function () {
@@ -1123,16 +1124,16 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
   gl.clearColor(.965, .945, .905, 1);
 
   var camY = worldY(window.scrollY + H / 2), px = 0, py = 0, t0 = performance.now(), last = t0, running = true;
-  var quality = 2, slow = 0, counted = 0;   // steps down if the device cannot keep up
+  var quality = 2, slow = 0, counted = 0, animT = 0, drawn = 0;   // steps down if the device cannot keep up
   var silkNow = silkTarget.slice();
   var sh = new Float32Array(32);
   doc.addEventListener('visibilitychange', function () { running = !doc.hidden; if (running) { last = performance.now(); slow = 0; counted = 0; requestAnimationFrame(frame); } });
 
   function frame(now) {
     if (!running) return;
-    var time = reduce ? 0 : (now - t0) / 1000;
+    var clock = (now - t0) / 1000;
     var dt = Math.min(.1, Math.max(.001, (now - last) / 1000)); last = now;
-    if (quality > 0 && time > 2) {
+    if (quality > 0 && clock > 2) {
       slow += dt; counted++;
       if (counted >= 50) {
         if (slow / counted > .026) { quality--; if (quality === 1) { maxDpr = 1; resize(); } else { root.classList.add('lite'); npDraw = Math.floor(NP / 2); } }
@@ -1146,6 +1147,14 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     px += (pointer.x - px) * ease; py += (pointer.y - py) * ease;
     for (var c = 0; c < 3; c++) silkNow[c] += (silkTarget[c] - silkNow[c]) * ease;
     M.silkDress.base = silkNow;
+    // Phones: draw only while the page moves; the scene rests when the guest is reading
+    if (small) {
+      var moving = Math.abs(target - camY) > 0.0008 || Math.abs(silkTarget[0] - silkNow[0]) > 0.002 || drawn < 3;
+      if (!moving) { requestAnimationFrame(frame); return; }
+      animT += dt;
+    }
+    drawn++;
+    var time = reduce ? 0 : (small ? animT : clock);
 
     var eye = [px * .55, camY - py * .3, DIST], look = [px * .12, camY, 0];
     var VP = mul(persp(FOV, W / H, .5, 60), lookAt(eye, look));
@@ -1172,7 +1181,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
         (o.rz || 0),
         (o.sx || 1) * s, (o.sy || 1) * s, (o.sz || 1) * s);
       draw.push({ o: o, m: m, z: z });
-      if (o.cast && ns < 8) { sh[ns * 4] = x; sh[ns * 4 + 1] = y; sh[ns * 4 + 2] = z; sh[ns * 4 + 3] = s * o.cast; ns++; }
+      if (o.cast && ns < 8 && !small) { sh[ns * 4] = x; sh[ns * 4 + 1] = y; sh[ns * 4 + 2] = z; sh[ns * 4 + 3] = s * o.cast; ns++; }
     }
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -1214,6 +1223,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     gl.disableVertexAttribArray(A.nor); gl.disableVertexAttribArray(A.pos);
 
     // Dust
+    if (NP) {
     gl.useProgram(pprog);
     gl.uniformMatrix4fv(PU.uVP, false, VP);
     gl.uniform1f(PU.uCamY, camY); gl.uniform1f(PU.uHalfW, halfW); gl.uniform1f(PU.uTime, time);
@@ -1222,6 +1232,7 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
     gl.enableVertexAttribArray(PA); gl.vertexAttribPointer(PA, 4, gl.FLOAT, false, 0, 0);
     gl.drawArrays(gl.POINTS, 0, npDraw);
     gl.disableVertexAttribArray(PA);
+    }
     gl.depthMask(true);
 
     requestAnimationFrame(frame);
