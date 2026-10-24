@@ -55,7 +55,7 @@ function doGet() {
 }
 
 function sheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = book_();
   var sh = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
   if (sh.getLastRow() === 0) {
     sh.appendRow(HEADERS);
@@ -64,6 +64,25 @@ function sheet_() {
     sh.setColumnWidths(1, HEADERS.length, 190);
   }
   return sh;
+}
+
+// The spreadsheet this script belongs to, or one it creates for itself
+function book_() {
+  var ss = null;
+  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (e) {}
+  if (ss) return ss;
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('SHEET_ID');
+  if (id) return SpreadsheetApp.openById(id);
+  ss = SpreadsheetApp.create('Ответы гостей · Виктория & Константин');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
+}
+
+// Run once from the editor: prepares the sheet and prints its link
+function setup() {
+  var sh = sheet_();
+  Logger.log('Таблица с ответами: ' + sh.getParent().getUrl());
 }
 
 // Text only, trimmed, and never treated as a formula by Sheets
