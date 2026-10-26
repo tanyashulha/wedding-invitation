@@ -610,8 +610,14 @@ h3{font-family:var(--display);font-weight:400;font-size:1.35rem;line-height:1.25
 
   try {
     var q = new URLSearchParams(window.location.search);
-    if (q.get('guests')) { VARS.guestForm = 'couple'; VARS.guestName = q.get('guests').slice(0, 60); fromLink = true; }
-    else if (q.get('guest')) { fromLink = true; VARS.guestName = q.get('guest').slice(0, 60); VARS.guestForm = q.get('form') === 'male' ? 'male' : 'female'; }
+    // Some messengers re-encode links; undo any leftover %20-style codes so names read cleanly
+    var nameParam = function (v) {
+      v = String(v || '');
+      try { for (var k = 0; k < 3 && /%[0-9A-Fa-f]{2}/.test(v); k++) v = decodeURIComponent(v); } catch (e) {}
+      return v.replace(/\+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
+    };
+    if (q.get('guests')) { VARS.guestForm = 'couple'; VARS.guestName = nameParam(q.get('guests')); fromLink = true; }
+    else if (q.get('guest')) { fromLink = true; VARS.guestName = nameParam(q.get('guest')); VARS.guestForm = q.get('form') === 'male' ? 'male' : 'female'; }
   } catch (e) {}
 
   function values() {

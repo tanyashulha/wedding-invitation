@@ -90,7 +90,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--taupe);b
 
   function linkFor(g) {
     // Keep Cyrillic readable in messengers; encode only what would break the link
-    var enc = function (v) { return v.replace(/[\s&#?+%=]/g, function (c) { return /\s/.test(c) ? '%20' : encodeURIComponent(c); }); };
+    var enc = function (v) { return v.replace(/[\s&#?+%=]/g, function (c) { return /\s/.test(c) ? '+' : encodeURIComponent(c); }); };
     if (g.form === 'couple') return base + '?guests=' + enc(g.name);
     return base + '?guest=' + enc(g.name) + (g.form === 'male' ? '&form=male' : '');
   }
